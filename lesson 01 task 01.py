@@ -1,16 +1,18 @@
-list_of_numbers = [1, 3, 5, 7, 9]
+from random import randint
 
-r = list_of_numbers[3]
-print(r)
+i = 0
+list_of_even = []
+size = 30
 
-products = {
-    'cherry': 110,
-    'strawberry': 100,
-    'cucumber': 40
-}
+while i < size:
+    temp_int = randint(1, 300)
+    # print(temp_int)
+    if not (temp_int % 2):
+        list_of_even.append(temp_int)
+        i += 1
+    else:
+        continue
 
-cherry_price = products['cherry']
-strawberry_price = products['strawberry']
-tomato_price = products.get('cucumber', 0)
-print(tomato_price)
+print(list_of_even)
+
 
