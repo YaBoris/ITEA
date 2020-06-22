@@ -37,4 +37,4 @@ for shop_name in shops:
         except ValueError:
             print("Enter correct value for sold goods: positive integer")
 
-shops[0].get_all_sold_goods()
+Shop.get_all_sold_goods()
