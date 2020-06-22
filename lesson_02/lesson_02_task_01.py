@@ -1,10 +1,9 @@
 class Car:
 
-    service_is_complete = False
-
     def __init__(self, model, color):
         self.base_color = color
         self.model = model
+        self.service_is_complete = False
 
     def repainting(self, color):
         self.base_color = color
