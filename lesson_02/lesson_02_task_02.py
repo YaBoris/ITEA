@@ -12,7 +12,8 @@ class Shop:
         self.sold_goods += number_of_goods
         Shop.all_sold_goods += number_of_goods
 
-    def get_all_sold_goods(self):
+    @staticmethod
+    def get_all_sold_goods():
         return Shop.all_sold_goods
 
 
@@ -20,8 +21,10 @@ shops = []
 
 shop1 = Shop("Berezka")
 shops.append(shop1)
+
 shop2 = Shop("Veselka", 10)
 shops.append(shop2)
+
 shop3 = Shop("Market")
 shops.append(shop3)
 
@@ -37,4 +40,5 @@ for shop_name in shops:
         except ValueError:
             print("Enter correct value for sold goods: positive integer")
 
-print("The total number of all goods sold in all stores now: {}".format(shops[0].get_all_sold_goods()))
+print("The total number of all goods sold in all stores now: {}".format(Shop.get_all_sold_goods()))
+
