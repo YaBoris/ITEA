@@ -41,4 +41,3 @@ for shop_name in shops:
             print("Enter correct value for sold goods: positive integer")
 
 print("The total number of all goods sold in all stores now: {}".format(Shop.get_all_sold_goods()))
-
