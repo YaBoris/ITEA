@@ -39,7 +39,7 @@ class Enrollee(Person):
         print(f"Enrollee surname: {self.surname}\n"
               f"Birthday: {self.birthday}\n"
               f"Faculty: {self.faculty}\n"
-              f"Age: {self.how_old()}\n\n")
+              f"Age: {self.how_old()}\n")
 
 
 class Student(Person):
@@ -54,7 +54,7 @@ class Student(Person):
               f"Birthday: {self.birthday}\n"
               f"Faculty: {self.faculty}\n"
               f"Course: {self.course}\n"
-              f"Age: {self.how_old()}\n\n")
+              f"Age: {self.how_old()}\n")
 
 
 class Teacher(Person):
@@ -71,9 +71,10 @@ class Teacher(Person):
               f"Faculty: {self.faculty}\n"
               f"Course: {self.position}\n"
               f"Expirience: {self.expirience}\n"
-              f"Age: {self.how_old()}\n\n")
+              f"Age: {self.how_old()}\n")
 
 
+count_of_person = ''
 year = ''
 month = ''
 day = ''
@@ -105,7 +106,6 @@ def search_age(range_numbers):
     else:
         wright_range = (range_numbers[0], range_numbers[1])
     for index in range(len(db_list)):
-        print(db_list[index].how_old())
         if wright_range[0] <= db_list[index].how_old() <= wright_range[1]:
             db_list[index].get_info()
 
@@ -144,17 +144,103 @@ def check_day(x_string, curr_month):
         return True
 
 
-def check_experience(x_string, birthday_year):
+def check_experience(expirience_data, birthday_year):
     date_now = datetime.date.today()
+    # print(type(birthday_year))
+    # print(birthday_year)
+    temp = int(birthday_year) + LOWER_AGE_LIMIT + int(expirience_data)
+    print(temp)
     try:
-        int(x_string)
-        if date_now.year < (int(birthday_year) + LOWER_AGE_LIMIT + int(x_string)) or int(x_string) < 1:
+        int(expirience_data)
+        if date_now.year < (int(birthday_year) + LOWER_AGE_LIMIT + int(expirience_data)) or int(expirience_data) < 1:
             raise ValueError
         return False
     except ValueError:
-        print("Enter correct value of the day of the month")
+        print("Enter correct value of the expirience")
         return True
 
+
+def decorator_set_general_data(func):
+    def wrapper():
+        new_day = ''
+        new_month = ''
+        new_year = ''
+
+        print("Enter surname: ")
+        new_surname = input()
+
+        is_continue = True
+        while is_continue:
+            print("Enter year of birth: ")
+            new_year = input()
+            is_continue = check_year(new_year)
+
+        is_continue = True
+        while is_continue:
+            print("Enter month of birth(1-12): ")
+            new_month = input()
+            is_continue = check_month(new_month)
+
+        is_continue = True
+        while is_continue:
+            print("Enter day of birth(): ")
+            new_day = input()
+            is_continue = check_day(new_day, new_month)
+
+        new_birthday = (int(new_day), int(new_month), int(new_year))
+        print("Enter faculty: ")
+        new_faculty = input()
+        added_person_data = func(new_year)
+        return new_surname, new_birthday, new_faculty, added_person_data
+    return wrapper
+
+
+@decorator_set_general_data
+def enrollee_data(b_year):
+    return None
+
+
+@decorator_set_general_data
+def student_data(b_year):
+    new_course = ''
+    while True:
+        print("Enter course(from 1 to 6): ")
+        try:
+            new_course = input()
+            int(new_course)
+            if int(new_course) > 6 or int(new_course) < 1:
+                raise ValueError
+            else:
+                break
+        except ValueError:
+            continue
+    return new_course
+
+
+@decorator_set_general_data
+def teacher_data(birhday_year):
+    b_year = birhday_year
+    new_experience = ''
+    print("Enter position: ")
+    new_position = input()
+    is_continue = True
+    while is_continue:
+        print("Enter experience: ")
+        new_experience = input()
+        is_continue = check_experience(new_experience, b_year)
+    return new_position, new_experience
+
+
+while True:
+    print("Enter count of new person: ")
+    try:
+        count_of_person = input()
+        int(count_of_person)
+        break
+    except ValueError:
+        continue
+
+selected_option = ''
 
 while True:
     print("1.Add new person\n"
@@ -171,126 +257,56 @@ while True:
         continue
 
     if int(selected_option) == 1:
-        while True:
-            print("1.Enrollee\n"
-                  "2.Student\n"
-                  "3.Teacher\n")
-            try:
-                selected_option = input()
-                int(selected_option)
-                if int(selected_option) > 3 or int(selected_option) < 1:
-                    raise ValueError
-            except ValueError:
-                continue
+        for i in range(int(count_of_person)):
+            while True:
+                print("1.Enrollee\n"
+                      "2.Student\n"
+                      "3.Teacher\n")
+                try:
+                    selected_option = input()
+                    int(selected_option)
+                    if int(selected_option) > 3 or int(selected_option) < 1:
+                        raise ValueError
+                    break
+                except ValueError:
+                    continue
 
             if int(selected_option) == 1:
-                print("Enter surname: ")
-                surname = input()
-
-                circle_value = True
-                while circle_value:
-                    print("Enter year of birth: ")
-                    year = input()
-                    circle_value = check_year(year)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter month of birth(1-12): ")
-                    month = input()
-                    circle_value = check_month(month)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter day of birth(): ")
-                    day = input()
-                    circle_value = check_day(day, month)
-
-                birthday = (int(day), int(month), int(year))
-                print("Enter faculty: ")
-                faculty = input()
-                db_list.append(Enrollee(surname, birthday, faculty))
-                break
+                user_data = enrollee_data()
+                db_list.append(Enrollee(user_data[0], user_data[1], user_data[2]))
+                # break
             elif int(selected_option) == 2:
-                print("Enter surname: ")
-                surname = input()
-
-                circle_value = True
-                while circle_value:
-                    print("Enter year of birth: ")
-                    year = input()
-                    circle_value = check_year(year)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter month of birth(1-12): ")
-                    month = input()
-                    circle_value = check_month(month)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter day of birth(): ")
-                    day = input()
-                    circle_value = check_day(day, month)
-
-                birthday = (int(day), int(month), int(year))
-                print("Enter faculty: ")
-                faculty = input()
-                while True:
-                    print("Enter course(from 1 to 6): ")
-                    try:
-                        course = input()
-                        int(course)
-                        if int(course) > 6 or int(course) < 1:
-                            raise ValueError
-                        else:
-                            break
-                    except ValueError:
-                        continue
-                db_list.append(Student(surname, birthday, faculty, int(course)))
-                break
+                user_data = student_data()
+                db_list.append(Student(user_data[0], user_data[1], user_data[2], user_data[3][0]))
+                # break
             elif int(selected_option) == 3:
-                print("Enter surname: ")
-                surname = input()
-
-                circle_value = True
-                while circle_value:
-                    print("Enter year of birth: ")
-                    year = input()
-                    circle_value = check_year(year)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter month of birth(1-12): ")
-                    month = input()
-                    circle_value = check_month(month)
-
-                circle_value = True
-                while circle_value:
-                    print("Enter day of birth(): ")
-                    day = input()
-                    circle_value = check_day(day, month)
-
-                birthday = (int(day), int(month), int(year))
-                print("Enter faculty: ")
-                faculty = input()
-                print("Enter position: ")
-                position = input()
-                while circle_value:
-                    print("Enter experience: ")
-                    experience = input()
-                    circle_value = check_experience(experience, year)
-
-                db_list.append(Teacher(surname, birthday, faculty, position, experience))
-                break
+                user_data = teacher_data()
+                db_list.append(Teacher(user_data[0], user_data[1], user_data[2], user_data[3][0], user_data[3][1]))
+                # break
     elif int(selected_option) == 2:
         age = []
-        print("Enter first number of age range:")
-        age.append(int(input()))
-        print("Enter first number of age range:")
-        age.append(int(input()))
+        limit = ''
+        while True:
+            print("Enter lower limit of age range:")
+            try:
+                limit = input()
+                int(limit)
+                break
+            except ValueError:
+                continue
+        age.append(int(limit))
+        while True:
+            print("Enter upper limit of age range:")
+            try:
+                limit = input()
+                int(limit)
+                break
+            except ValueError:
+                continue
+        age.append(int(limit))
         search_age(age)
     elif int(selected_option) == 3:
-        for i in range(len(db_list)):
-            db_list[i].get_info()
+        for j in range(len(db_list)):
+            db_list[j].get_info()
     elif int(selected_option) == 4:
         break
