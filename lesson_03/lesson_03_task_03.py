@@ -36,11 +36,11 @@ class ComplexNumbers:
             return real_string[:4] + '+' + imaginary_string[:4] + 'i'
 
 
-real_part1 = 10
-imaginary_part1 = -4
+real_part1 = -10
+imaginary_part1 = 4
 
-real_part2 = 5
-imaginary_part2 = 1
+real_part2 = 1
+imaginary_part2 = 10
 
 complex_number_a = ComplexNumbers((real_part1, imaginary_part1))
 complex_number_b = ComplexNumbers((real_part2, imaginary_part2))
