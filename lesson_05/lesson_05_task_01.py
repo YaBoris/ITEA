@@ -1,21 +1,6 @@
 from threading import Thread
 
-thread_data = []
-MAX_VALUE = 500
-
-
-def check_is_daemon(thr_data):
-    def decorator_thread(func):
-        def wrapper():
-            thr_data[0][0].daemon = thr_data[0][1]
-            if thr_data[0][1]:
-                print(f"Thread \"{thr_data[0][0].name}\" started as daemon. State {thr_data[0][1]}\n")
-                thr_data[0][0].start()
-            else:
-                print(f"Thread \"{thr_data[0][0].name}\" started as regular. State {thr_data[0][1]}\n")
-                thr_data[0][0].start()
-        return wrapper
-    return decorator_thread
+MAX_VALUE = 50
 
 
 def work_with_threads():
@@ -30,19 +15,27 @@ def work_with_threads():
             print("Enter correct option - \'Yes\' or \'No\'\n")
 
 
-@check_is_daemon(thread_data)
-def nothing_to_do():
-    pass
+def check_is_daemon(is_daemon):
+    def decorator_thread(func):
+        def wrapper(upper_limit):
+            t = Thread(target=func, args=(upper_limit, ), daemon=is_daemon)
+            if is_daemon:
+                print(f"Thread \"{t.name}\" started as daemon with parameter: {upper_limit}.\n")
+                t.start()
+            else:
+                print(f"Thread \"{t.name}\" started as regular with parameter: {upper_limit}.\n")
+                t.start()
+        return wrapper
+    return decorator_thread
 
 
-def some_function():
+@check_is_daemon(work_with_threads())
+def some_function(upper_limit):
     print("Function started\n")
-    for index in range(MAX_VALUE):
-        print(f"index {index} = {index ** MAX_VALUE}")
+    for index in range(upper_limit):
+        print(f"index {index} = {index ** upper_limit}")
     print("Function completed\n")
 
 
 if __name__ == "__main__":
-    is_daemon = work_with_threads()
-    thread_data.append((Thread(target=some_function), is_daemon))
-    nothing_to_do()
+    some_function(MAX_VALUE)
