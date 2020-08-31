@@ -1,9 +1,10 @@
-
-
-class MyList(list):
-    def __init__(self):
-        super(MyList, self).__init__()
-        self._data = []
+class MyList:
+    def __init__(self, list_data):
+        if isinstance(list_data, list):
+            self._data = list_data
+        else:
+            raise TypeError
+        self.cursor = 0
 
     def __getitem__(self, item):
         if self._key_is_valid(item):
